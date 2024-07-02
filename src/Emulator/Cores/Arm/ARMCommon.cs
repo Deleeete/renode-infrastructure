@@ -77,15 +77,20 @@ namespace Antmicro.Renode.Peripherals.CPU
 
     public class Affinity
     {
-        public Affinity(byte level0, byte level1 = 0, byte level2 = 0, byte level3 = 0)
+        public Affinity(byte level0, byte level1 = 0, byte level2 = 0, byte level3 = 0,
+            byte level4 = 0, byte level5 = 0, byte level6 = 0, byte level7 = 0)
         {
             levels[0] = level0;
             levels[1] = level1;
             levels[2] = level2;
             levels[3] = level3;
+            levels[4] = level0;
+            levels[5] = level1;
+            levels[6] = level2;
+            levels[7] = level3;
         }
 
-        public Affinity(uint allLevels)
+        public Affinity(ulong allLevels)
         {
             AllLevels = allLevels;
         }
@@ -95,9 +100,9 @@ namespace Antmicro.Renode.Peripherals.CPU
             return levels[levelIndex];
         }
 
-        public uint AllLevels
+        public ulong AllLevels
         {
-            get => BitHelper.ToUInt32(levels, 0, levels.Length, reverse: true);
+            get => BitHelper.ToUInt64(levels, 0, levels.Length, reverse: true);
             protected set => BitHelper.GetBytesFromValue(levels, 0, value, levels.Length, reverse: true);
         }
 
@@ -107,7 +112,7 @@ namespace Antmicro.Renode.Peripherals.CPU
         }
 
         protected readonly byte[] levels = new byte[LevelsCount];
-        protected const int LevelsCount = 4;
+        protected const int LevelsCount = 8;
     }
 
     public class MutableAffinity : Affinity

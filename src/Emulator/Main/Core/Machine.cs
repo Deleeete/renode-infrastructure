@@ -58,10 +58,10 @@ namespace Antmicro.Renode.Core
             SetLocalName(SystemBus, SystemBusName);
             gdbStubs = new Dictionary<int, GdbStub>();
 
-            invalidatedAddressesById = new Dictionary<uint, List<long>>();
+            invalidatedAddressesById = new Dictionary<ulong, List<long>>();
             invalidatedAddressesByArchitecture = new Dictionary<string, List<long>>();
             invalidatedAddressesLock = new object();
-            firstUnbroadcastedDirtyAddressIndex = new Dictionary<uint, int>();
+            firstUnbroadcastedDirtyAddressIndex = new Dictionary<ulong, int>();
 
             if(createLocalTimeSource)
             {
@@ -839,7 +839,7 @@ namespace Antmicro.Renode.Core
             }
         }
 
-        public long[] GetNewDirtyAddressesForCore(uint id)
+        public long[] GetNewDirtyAddressesForCore(ulong id)
         {
             if(!firstUnbroadcastedDirtyAddressIndex.ContainsKey(id))
             {
@@ -857,7 +857,7 @@ namespace Antmicro.Renode.Core
             return newAddresses;
         }
 
-        public void AppendDirtyAddresses(uint cpuId, long[] addresses)
+        public void AppendDirtyAddresses(ulong cpuId, long[] addresses)
         {
             if(!invalidatedAddressesById.ContainsKey(cpuId))
             {
@@ -1255,7 +1255,7 @@ namespace Antmicro.Renode.Core
         public const string UnnamedPeripheral = "[no-name]";
         public const string MachineKeyword = "machine";
 
-        private void TryReduceBroadcastedDirtyAddresses(uint cpuId)
+        private void TryReduceBroadcastedDirtyAddresses(ulong cpuId)
         {
             var firstUnread = firstUnbroadcastedDirtyAddressIndex.Values.Min();
             if(firstUnread == 0)
@@ -1681,8 +1681,8 @@ namespace Antmicro.Renode.Core
          *  Variables used for memory invalidation
          */
         private const int InitialDirtyListLength = 1 << 10;
-        private readonly Dictionary<uint, int> firstUnbroadcastedDirtyAddressIndex;
-        private readonly Dictionary<uint, List<long>> invalidatedAddressesById;
+        private readonly Dictionary<ulong, int> firstUnbroadcastedDirtyAddressIndex;
+        private readonly Dictionary<ulong, List<long>> invalidatedAddressesById;
         private readonly Dictionary<string, List<long>> invalidatedAddressesByArchitecture;
         private readonly object invalidatedAddressesLock;
 

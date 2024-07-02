@@ -18,7 +18,7 @@ namespace Antmicro.Renode.Peripherals.CPU
     public interface ICPU : IPeripheral, IHasOwnLife
     {
         string Architecture { get; }
-        uint Id { get; }
+        ulong Id { get; }
         string Model { get; }
         RegisterValue PC { get; set; }
         bool IsHalted { get; set; }

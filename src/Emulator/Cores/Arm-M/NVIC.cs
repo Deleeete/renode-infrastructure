@@ -137,7 +137,7 @@ namespace Antmicro.Renode.Peripherals.IRQControllers
             case Registers.VectorTableOffset:
                 return cpu.VectorTableOffset;
             case Registers.CPUID:
-                return cpuId;
+                return (uint)cpuId;
             case Registers.CoprocessorAccessControl:
                 return cpu.CPACR;
             case Registers.FPContextControl:
@@ -1188,7 +1188,7 @@ namespace Antmicro.Renode.Peripherals.IRQControllers
         private CortexM cpu;
         private readonly LimitTimer systick;
         private readonly IMachine machine;
-        private uint cpuId;
+        private ulong cpuId;
 
         private const int MPUStart             = 0xD90;
         private const int MPUEnd               = 0xDC4;    // resized for compat. with V8 MPU

@@ -151,7 +151,7 @@ namespace Antmicro.Renode.Peripherals.IRQControllers
         {
             var interruptId = (int)value & 3;
             var targetListField = (value >> 24) & 3;
-            var cpuTargetList = (uint)((value >> 16) & 3);
+            var cpuTargetList = (ulong)((value >> 16) & 3);
             if(!sysbus.TryGetCurrentCPU(out var askingCpu))
             {
                 this.Log(LogLevel.Warning, "Generate interrupt write by not a CPU - ignoring.");

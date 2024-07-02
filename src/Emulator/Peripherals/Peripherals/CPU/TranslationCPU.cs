@@ -56,7 +56,7 @@ namespace Antmicro.Renode.Peripherals.CPU
         {
         }
 
-        protected TranslationCPU(uint id, string cpuType, IMachine machine, Endianess endianness, CpuBitness bitness = CpuBitness.Bits32)
+        protected TranslationCPU(ulong id, string cpuType, IMachine machine, Endianess endianness, CpuBitness bitness = CpuBitness.Bits32)
             : base(id, cpuType, machine, endianness, bitness)
         {
             this.translationCacheSize = DefaultTranslationCacheSize;
@@ -2060,7 +2060,7 @@ namespace Antmicro.Renode.Peripherals.CPU
         /// It's usually not what is needed to identify a core in multi-processing context - instead `cpuId` (passed in CPU constructor) is used.
         /// </summary>
         [Export]
-        private uint GetMpIndex()
+        private ulong GetMpIndex()
         {
             return Id;
         }

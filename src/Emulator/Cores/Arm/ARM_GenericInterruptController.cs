@@ -379,7 +379,7 @@ namespace Antmicro.Renode.Peripherals.IRQControllers
             this.Log(LogLevel.Noisy, "{0} reads from 0x{1:X} ({2}) register of {3}, returned 0x{4:X}.", GetAskingCPUEntry().Name, offset, prettyOffset, collectionName, value);
         }
 
-        public bool TryGetCPUEntry(uint processorNumber, out CPUEntry cpuEntry)
+        public bool TryGetCPUEntry(ulong processorNumber, out CPUEntry cpuEntry)
         {
             var exists = cpusByProcessorNumberCache.TryGetValue(processorNumber, out var cpu);
             cpuEntry = exists ? cpuEntries[cpu] : null;
@@ -391,7 +391,7 @@ namespace Antmicro.Renode.Peripherals.IRQControllers
             return cpuEntries.TryGetValue(cpu, out cpuEntry);
         }
 
-        public CPUEntry GetCPUEntry(uint processorNumber)
+        public CPUEntry GetCPUEntry(ulong processorNumber)
         {
             if(!TryGetCPUEntry(processorNumber, out var cpuEntry))
             {
@@ -1858,7 +1858,7 @@ namespace Antmicro.Renode.Peripherals.IRQControllers
 
         private readonly IBusController busController;
         private readonly Object locker = new Object();
-        private readonly Dictionary<uint, IARMSingleSecurityStateCPU> cpusByProcessorNumberCache = new Dictionary<uint, IARMSingleSecurityStateCPU>();
+        private readonly Dictionary<ulong, IARMSingleSecurityStateCPU> cpusByProcessorNumberCache = new Dictionary<ulong, IARMSingleSecurityStateCPU>();
         private readonly Dictionary<IARMSingleSecurityStateCPU, CPUEntry> cpuEntries = new Dictionary<IARMSingleSecurityStateCPU, CPUEntry>();
         private readonly InterruptSignalType[] supportedInterruptSignals;
         private readonly ReadOnlyDictionary<InterruptId, SharedInterrupt> sharedInterrupts;
@@ -2245,7 +2245,7 @@ namespace Antmicro.Renode.Peripherals.IRQControllers
             public EndOfInterruptModes EndOfInterruptModeVirtual { get; set; }
             public bool IsStateSecure => cpu.SecurityState == SecurityState.Secure;
             public string Name { get; }
-            public uint ProcessorNumber => cpu.Affinity.AllLevels & gic.affinityToIdMask;
+            public ulong ProcessorNumber => cpu.Affinity.AllLevels & gic.affinityToIdMask;
             public uint TargetFieldFlag => ProcessorNumber <= CPUsCountLegacySupport ? 1U << (int)ProcessorNumber : 0;
             public bool VirtualCPUInterfaceEnabled { get; set; }
             public bool VirtualFIQEnabled { get; set; }

@@ -37,7 +37,7 @@ namespace Antmicro.Renode.Peripherals.CPU
 {
     public abstract class BaseCPU : CPUCore, ICPU, IDisposable, ITimeSink, IInitableCPU
     {
-        protected BaseCPU(uint id, string cpuType, IMachine machine, Endianess endianness, CpuBitness bitness = CpuBitness.Bits32)
+        protected BaseCPU(ulong id, string cpuType, IMachine machine, Endianess endianness, CpuBitness bitness = CpuBitness.Bits32)
             : base(id)
         {
             if(cpuType == null)

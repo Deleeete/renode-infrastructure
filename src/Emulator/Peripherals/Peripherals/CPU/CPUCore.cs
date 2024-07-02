@@ -14,7 +14,7 @@ namespace Antmicro.Renode.Peripherals.CPU
 {
     public abstract class CPUCore : IdentifiableObject, IEmulationElement
     {
-        protected CPUCore(uint id)
+        protected CPUCore(ulong id)
         {
             Id = id;
         }
@@ -53,7 +53,7 @@ namespace Antmicro.Renode.Peripherals.CPU
             }
         }
         
-        public uint Id { get; }
+        public ulong Id { get; }
         
         public bool IsStarted => started;
         

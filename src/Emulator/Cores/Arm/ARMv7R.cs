@@ -15,7 +15,7 @@ namespace Antmicro.Renode.Peripherals.CPU
 {
     public class ARMv7R : Arm, IARMSingleSecurityStateCPU
     {
-        public ARMv7R(IMachine machine, string cpuType, uint cpuId = 0, ARM_GenericInterruptController genericInterruptController = null, Endianess endianness = Endianess.LittleEndian,
+        public ARMv7R(IMachine machine, string cpuType, ulong cpuId = 0, ARM_GenericInterruptController genericInterruptController = null, Endianess endianness = Endianess.LittleEndian,
                       uint? numberOfMPURegions = null, ArmSignalsUnit signalsUnit = null)
             : base(cpuType, machine, cpuId, endianness, numberOfMPURegions, signalsUnit)
         {
