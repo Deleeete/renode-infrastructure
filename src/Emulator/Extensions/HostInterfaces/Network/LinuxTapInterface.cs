@@ -55,15 +55,18 @@ namespace Antmicro.Renode.HostInterfaces.Network
 
         public void Pause()
         {
-            if(active)
+            if(!active)
             {
-                lock(lockObject)
-                {
-                    var token = cts;
-                    token.Cancel();
-                    thread.Join();
-                    thread = null;         
-                }
+                return;
+            }
+
+            lock(lockObject)
+            {
+                var token = cts;
+                token.Cancel();
+                // we're not joining the read thread as it's canceled and will return after Read times out;
+                // we might end up with multiple TransmitLoop threads running at the same time as a result of a quick Pause/Resume actions,
+                // but only the last one will process data - the rest will terminate unconditionally after leaving the Read function call
             }
         }
 
@@ -92,17 +95,20 @@ namespace Antmicro.Renode.HostInterfaces.Network
 
         public void Resume()
         {
-            if(active)
+            if(!active)
             {
-                lock(lockObject)
+                return;
+            }
+
+            lock(lockObject)
+            {
+                cts = new CancellationTokenSource();
+                thread = new Thread(() => TransmitLoop(cts.Token))
                 {
-                    cts = new CancellationTokenSource();
-                    thread = new Thread(() => TransmitLoop(cts.Token)) {
-                        Name = this.GetType().Name,
-                        IsBackground = true
-                    };
-                    thread.Start();
-                }
+                    Name = this.GetType().Name,
+                    IsBackground = true
+                };
+                thread.Start();
             }
         }
 
@@ -224,7 +230,7 @@ namespace Antmicro.Renode.HostInterfaces.Network
                 }
                 try
                 {
-                    buffer = LibCWrapper.Read(stream.Handle, MTU, 1000, () => token.IsCancellationRequested);
+                    buffer = LibCWrapper.Read(stream.Handle, MTU, ReadTimeout, () => token.IsCancellationRequested);
                 }
                 catch(ArgumentException)
                 {
@@ -253,6 +259,7 @@ namespace Antmicro.Renode.HostInterfaces.Network
 
         private const int DeviceNameBufferSize = 8192;
         private const int MTU = 1522;
+        private const int ReadTimeout = 100; // in milliseconds
 
         [Transient]
         private bool active;

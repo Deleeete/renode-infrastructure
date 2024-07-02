@@ -88,11 +88,13 @@ namespace Antmicro.Renode.Peripherals.CPU
             levels[5] = level1;
             levels[6] = level2;
             levels[7] = level3;
+            UpdateLevels();
         }
 
         public Affinity(ulong allLevels)
         {
-            AllLevels = allLevels;
+            BitHelper.GetBytesFromValue(levels, 0, allLevels, levels.Length, reverse: true);
+            UpdateLevels();
         }
 
         public byte GetLevel(int levelIndex)
@@ -100,19 +102,23 @@ namespace Antmicro.Renode.Peripherals.CPU
             return levels[levelIndex];
         }
 
-        public ulong AllLevels
-        {
-            get => BitHelper.ToUInt64(levels, 0, levels.Length, reverse: true);
-            protected set => BitHelper.GetBytesFromValue(levels, 0, value, levels.Length, reverse: true);
-        }
+        public ulong AllLevels => allLevels;
 
         public override string ToString()
         {
             return String.Join(".", levels);
         }
 
+        // NOTE: UpdateLevels needs to be called whenever any value inside of `levels` is updated.
+        protected void UpdateLevels()
+        {
+            allLevels = BitHelper.ToUInt32(levels, 0, levels.Length, reverse: true);
+        }
+
         protected readonly byte[] levels = new byte[LevelsCount];
         protected const int LevelsCount = 8;
+
+        private ulong allLevels;
     }
 
     public class MutableAffinity : Affinity
@@ -122,6 +128,7 @@ namespace Antmicro.Renode.Peripherals.CPU
         public void SetLevel(int levelIndex, byte levelValue)
         {
             levels[levelIndex] = levelValue;
+            UpdateLevels();
         }
     }
 }

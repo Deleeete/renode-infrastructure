@@ -4,14 +4,12 @@
 // This file is licensed under the MIT License.
 // Full license text is available in 'licenses/MIT.txt'.
 //
-using System;
-using Antmicro.Renode.Logging.Profiling;
 
 namespace Antmicro.Renode.Peripherals.CPU
 {
-    public interface ICPUWithMemoryAccessHooks : ICPU
+    public interface IIndirectCSRPeripheral : IPeripheral
     {
-        void SetHookAtMemoryAccess(Action<ulong, MemoryOperation, ulong, ulong> hook);
+        uint ReadIndirectCSR(uint iselect, uint ireg);
+        void WriteIndirectCSR(uint iselect, uint ireg, uint value);
     }
 }
-
